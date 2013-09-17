@@ -10,15 +10,12 @@
 import atexit
 import time
 import RPi.GPIO as GPIO
-from transmitter import RawTransmitter
+from morse import Transmitter
 
 atexit.register(GPIO.cleanup)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)
 
-tx = RawTransmitter(26)
-time.sleep(1)
-tx.on(0.5)
-tx.off(0.5)
-tx.on(0.5)
+tx = Transmitter(26, 0.25)
+tx.send('what hath god wrought')
 tx.join()

@@ -6,6 +6,33 @@
 # Alethea Butler <alethea@aletheabutler.com>
 #
 
+import transmitter
+
+
+class Transmitter(transmitter.Transmitter):
+    def __init__(self, channel, unit=1):
+        transmitter.Transmitter.__init__(self, channel)
+        self.unit = unit
+
+    def send(self, string):
+        self.put(encode(string))
+
+    def encode(self, morse):
+        if not morse.endswith(SK):
+            morse += STRING_TO_MORSE[' '] + SK
+        # Note that letter and word gaps are reduced by 1 unit do to the
+        # trailing 1 unit gap on each character
+        unit_encoding = {
+            '.': ((self.unit, True), (self.unit, False)),
+            '-': ((3 * self.unit, True), (self.unit, False)),
+            ' ': ((2 * self.unit, False),),
+            '_': ((6 * self.unit, False),)
+        }
+        atom = []
+        for sym in morse:
+            atom.extend(unit_encoding[sym])
+        return atom
+
 
 def encode(string):
     morse_list = [STRING_TO_MORSE[char] for char in string.upper()]

@@ -4,7 +4,6 @@
 # Olin College
 # Lab 1
 # Alethea Butler <alethea@aletheabutler.com>
-# 2013-09-16
 #
 
 import atexit

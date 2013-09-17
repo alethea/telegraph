@@ -10,13 +10,14 @@
 import atexit
 import time
 import RPi.GPIO as GPIO
+from transmitter import Transmitter
 
 atexit.register(GPIO.cleanup)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)
 
-state = True
-while True:
-    GPIO.output(26, state)
-    time.sleep(0.025)
-    state = not state
+tx = Transmitter(26)
+tx.on(0.5)
+tx.off(0.5)
+tx.on(0.5)
+tx.join()

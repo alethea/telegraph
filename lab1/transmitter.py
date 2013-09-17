@@ -20,14 +20,22 @@ class Transmitter:
         self.worker = TransmitterWorker(self)
         self.worker.start()
 
-    def on(self, duration):
-        self.queue.put((duration, GPIO.HIGH))
-
-    def off(self, duration):
-        self.queue.put((duration, GPIO.LOW))
+    def put(self, atom):
+        self.queue.put(atom)
 
     def join(self):
         self.queue.join()
+
+
+class RawTransmitter(Transmitter):
+    def encode(self, atom):
+        return [atom]
+
+    def on(self, duration):
+        self.put((duration, GPIO.HIGH))
+
+    def off(self, duration):
+        self.put((duration, GPIO.LOW))
 
 
 class TransmitterWorker(threading.Thread):
@@ -39,10 +47,11 @@ class TransmitterWorker(threading.Thread):
     def run(self):
         while True:
             try:
-                duration, state = self.parent.queue.get_nowait()
+                atom = self.parent.queue.get_nowait()
             except queue.Empty:
                 GPIO.output(self.parent.channel, GPIO.LOW)
-                duration, state = self.parent.queue.get()
-            GPIO.output(self.parent.channel, state)
-            time.sleep(duration)
+                atom = self.parent.queue.get()
+            for duration, state in self.parent.encode(atom):
+                GPIO.output(self.parent.channel, state)
+                time.sleep(duration)
             self.parent.queue.task_done()

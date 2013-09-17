@@ -38,8 +38,11 @@ class TransmitterWorker(threading.Thread):
 
     def run(self):
         while True:
-            duration, state = self.parent.queue.get()
+            try:
+                duration, state = self.parent.queue.get_nowait()
+            except queue.Empty:
+                GPIO.output(self.parent.channel, GPIO.LOW)
+                duration, state = self.parent.queue.get()
             GPIO.output(self.parent.channel, state)
             time.sleep(duration)
             self.parent.queue.task_done()
-            GPIO.output(self.parent.channel, GPIO.LOW)

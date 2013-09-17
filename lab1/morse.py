@@ -10,9 +10,9 @@ import transmitter
 
 
 class Transmitter(transmitter.Transmitter):
-    def __init__(self, channel, unit=1):
+    def __init__(self, channel, freq=1):
         transmitter.Transmitter.__init__(self, channel)
-        self.unit = unit
+        self.freq = freq
 
     def send(self, string):
         self.put(encode(string))
@@ -20,13 +20,14 @@ class Transmitter(transmitter.Transmitter):
     def encode(self, morse):
         if not morse.endswith(TX_SK):
             morse += TX_SK
+        unit = 1 / self.freq
         # Note that letter and word gaps are reduced by 1 unit do to the
         # trailing 1 unit gap on each character
         unit_encoding = {
-            '.': ((self.unit, True), (self.unit, False)),
-            '-': ((3 * self.unit, True), (self.unit, False)),
-            ' ': ((2 * self.unit, False),),
-            '_': ((6 * self.unit, False),)
+            '.': ((unit, True), (unit, False)),
+            '-': ((3 * unit, True), (unit, False)),
+            ' ': ((2 * unit, False),),
+            '_': ((6 * unit, False),)
         }
         atom = []
         for sym in morse:

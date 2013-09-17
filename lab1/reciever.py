@@ -13,15 +13,19 @@ import RPi.GPIO as GPIO
 atexit.register(GPIO.cleanup)
 GPIO.setmode(GPIO.BOARD)
 
-poll_freq = 5e-5
+
+poll_freq = 1e-5
 flush_delay = 0.01
-while True:
-    GPIO.setup(15, GPIO.OUT)
-    GPIO.output(15, GPIO.LOW)
+def read(channel):
+    GPIO.setup(channel, GPIO.OUT)
+    GPIO.output(channel, GPIO.LOW)
     time.sleep(flush_delay)
-    GPIO.setup(15, GPIO.IN)
+    GPIO.setup(channel, GPIO.IN)
     count = 0
-    while (GPIO.input(15) == GPIO.LOW):
+    while (GPIO.input(channel) == GPIO.LOW):
         count += 1
         time.sleep(poll_freq)
-    print(count)
+    return count
+
+while True:
+    print(read(15))

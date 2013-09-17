@@ -15,7 +15,7 @@ class Transmitter(transmitter.Transmitter):
         self.freq = freq
 
     def send(self, string):
-        self.put(encode(string))
+        self.queue.put(encode(string))
 
     def encode(self, morse):
         if not morse.endswith(TX_SK):

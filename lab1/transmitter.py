@@ -20,7 +20,7 @@ class Transmitter:
         self.worker = TransmitterWorker(self)
         self.worker.start()
 
-    def put(self, atom):
+    def send(self, atom):
         self.queue.put(atom)
 
     def join(self):
@@ -32,10 +32,10 @@ class RawTransmitter(Transmitter):
         return [atom]
 
     def on(self, duration):
-        self.put((duration, GPIO.HIGH))
+        self.send((duration, GPIO.HIGH))
 
     def off(self, duration):
-        self.put((duration, GPIO.LOW))
+        self.send((duration, GPIO.LOW))
 
 
 class TransmitterWorker(threading.Thread):

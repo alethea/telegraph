@@ -16,7 +16,7 @@ def main():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)
 
-    tx = Transmitter(26, 0.25)
+    tx = Transmitter(26)
 
     print ('Morse transmitter ready')
     while True:

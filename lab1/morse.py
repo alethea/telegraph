@@ -18,8 +18,8 @@ class Transmitter(transmitter.Transmitter):
         self.put(encode(string))
 
     def encode(self, morse):
-        if not morse.endswith(SK):
-            morse += STRING_TO_MORSE[' '] + SK
+        if not morse.endswith(TX_SK):
+            morse += TX_SK
         # Note that letter and word gaps are reduced by 1 unit do to the
         # trailing 1 unit gap on each character
         unit_encoding = {
@@ -90,5 +90,6 @@ STRING_TO_MORSE = {
 }
 
 SK = '...-.-'
+TX_SK = '_' + SK + '_'
 
 MORSE_TO_STRING = {morse: string for string, morse in STRING_TO_MORSE.items()}

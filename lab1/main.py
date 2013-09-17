@@ -7,14 +7,28 @@
 #
 
 import atexit
-import time
 import RPi.GPIO as GPIO
 from morse import Transmitter
 
-atexit.register(GPIO.cleanup)
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)
+def main():
+    atexit.register(GPIO.cleanup)
 
-tx = Transmitter(26, 0.25)
-tx.send('what hath god wrought')
-tx.join()
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)
+
+    tx = Transmitter(26, 0.25)
+
+    print ('Morse transmitter ready')
+    while True:
+        try:
+            string = input('> ')
+            if len(string) > 0:
+                tx.send(string)
+        except(EOFError):
+            print('\nSending unsent messages')
+            tx.join()
+            break
+
+
+if __name__ == '__main__':
+    main()

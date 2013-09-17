@@ -12,12 +12,12 @@ import queue
 import RPi.GPIO as GPIO
 
 
-class Reciever:
+class Receiver:
     def __init__(self, channel, poll_freq=10):
         self.channel = channel
         self.poll_freq = poll_freq
         self.queue = queue.Queue()
-        self.worker = RecieverWorker(self)
+        self.worker = ReceiverWorker(self)
         self.worker.start()
     
     edge_poll_freq = 1e-5
@@ -39,7 +39,7 @@ class Reciever:
         return count < self.threshold
 
 
-class RecieverWorker(threading.Thread):
+class ReceiverWorker(threading.Thread):
     def __init__(self, parent):
         threading.Thread.__init__(self)
         self.daemon = True

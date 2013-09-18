@@ -56,7 +56,7 @@ class Receiver(receiver.Receiver):
             else:
                 self.message.append('_')
         if self.message[-len(RX_SK):] == RX_SK:
-            return decode(''.join(self.message))
+            return decode(''.join(self.message)).strip()
         return None
 
 

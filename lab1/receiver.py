@@ -35,7 +35,7 @@ class Receiver:
         self.running = False
         self.worker.join()
 
-    def _read(self):
+    def read(self):
         GPIO.setup(self.channel, GPIO.OUT)
         GPIO.output(self.channel, GPIO.LOW)
         time.sleep(self.flush_delay)
@@ -66,7 +66,7 @@ class ReceiverWorker(threading.Thread):
         start = time.time()
         while self.parent.running:
             time.sleep(1 / self.parent.poll_freq)
-            current = self.parent._read()
+            current = self.parent.read()
             if last != current:
                 end = time.time()
                 self.parent.queue.put((end - start, last))

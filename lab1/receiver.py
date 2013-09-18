@@ -26,7 +26,10 @@ class Receiver:
     threshold = 2
 
     def listen(self):
-        return self.queue.get()
+        decoded = None
+        while decoded is None:
+            decoded = self.decode(self.queue.get())
+        return decoded
 
     def terminate(self):
         self.running = False
@@ -49,7 +52,7 @@ class RawReceiver(Receiver):
         Receiver.__init__(self, channel, poll_freq)
 
     def decode(self, atom):
-        return atom[0]
+        return atom
 
 
 class ReceiverWorker(threading.Thread):
@@ -57,7 +60,6 @@ class ReceiverWorker(threading.Thread):
         threading.Thread.__init__(self)
         self.daemon = True
         self.parent = parent
-        self.atom = []
 
     def run(self):
         last = False
@@ -67,10 +69,6 @@ class ReceiverWorker(threading.Thread):
             current = self.parent._read()
             if last != current:
                 end = time.time()
-                self.atom.append((end - start, last))
+                self.parent.queue.put((end - start, last))
                 start = end
                 last = current
-                decoded = self.parent.decode(self.atom)
-                if decoded is not None:
-                    self.parent.queue.put(decoded)
-                    self.atom = []

@@ -17,6 +17,7 @@ class Transmitter:
         GPIO.setup(channel, GPIO.OUT, initial=GPIO.LOW)
         self.channel = channel
         self.queue = queue.Queue()
+        self.running = True
         self.worker = TransmitterWorker(self)
         self.worker.start()
 
@@ -25,6 +26,10 @@ class Transmitter:
 
     def join(self):
         self.queue.join()
+
+    def terminate(self):
+        self.running = False
+        self.worker.join()
 
 
 class RawTransmitter(Transmitter):
@@ -45,7 +50,7 @@ class TransmitterWorker(threading.Thread):
         self.parent = parent
 
     def run(self):
-        while True:
+        while self.parent.running:
             try:
                 atom = self.parent.queue.get_nowait()
             except queue.Empty:

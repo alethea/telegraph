@@ -76,6 +76,7 @@ def decode(morse):
 
 
 STRING_TO_MORSE = {
+    '': '',
     ' ': '_',
     'A': '.-',
     'B': '-...',

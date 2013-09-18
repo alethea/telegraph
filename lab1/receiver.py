@@ -32,6 +32,16 @@ class Receiver:
             decoded = self.decode(duration, state)
         return decoded
 
+    def poll(self):
+        message = None
+        while message is None:
+            try:
+                duration, state = self.queue.get_nowait()
+                message = self.decode(duration, state)
+            except queue.Empty:
+                return None
+        return message
+
     def terminate(self):
         self.running = False
         self.worker.join()

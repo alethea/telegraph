@@ -8,7 +8,7 @@
 
 import atexit
 import RPi.GPIO as GPIO
-from morse import Transmitter
+from morse import Transmitter, Receiver
 
 def main():
     atexit.register(GPIO.cleanup)
@@ -17,15 +17,20 @@ def main():
     GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)
 
     tx = Transmitter(26)
+    rx = Receiver(15)
 
-    print ('Morse transmitter ready')
+    print ('Morse transceiver ready')
     while True:
         try:
+            message = rx.poll()
+            if message is not None:
+                print('< ' + message)
             string = input('> ')
             if len(string) > 0:
                 tx.send(string)
         except(EOFError):
             print('\nSending unsent messages')
+            rx.terminate()
             tx.join()
             break
 

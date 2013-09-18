@@ -7,12 +7,13 @@
 #
 
 import transmitter
+import receiver
 
 
 class Transmitter(transmitter.Transmitter):
     def __init__(self, channel, freq=1):
-        transmitter.Transmitter.__init__(self, channel)
         self.freq = freq
+        transmitter.Transmitter.__init__(self, channel)
 
     def send(self, string):
         self.queue.put(encode(string))
@@ -29,10 +30,34 @@ class Transmitter(transmitter.Transmitter):
             ' ': ((2 * unit, False),),
             '_': ((6 * unit, False),)
         }
-        atom = []
+        message = []
         for sym in morse:
-            atom.extend(unit_encoding[sym])
-        return atom
+            message.extend(unit_encoding[sym])
+        return message
+
+class Receiver(receiver.Receiver):
+    def __init__(self, channel, freq=1):
+        self.freq = freq
+        self.message = []
+        receiver.Receiver.__init__(self, channel, 15)
+
+    def decode(self, duration, state):
+        unit = 1 / self.freq
+        if state:
+            if duration < 2 * unit:
+                self.message.append('.')
+            else: 
+                self.message.append('-')
+        else:
+            if duration < 2 * unit:
+                pass
+            elif duration < 5 * unit:
+                self.message.append(' ')
+            else:
+                self.message.append('_')
+        if self.message[-len(RX_SK):] == RX_SK:
+            return decode(''.join(self.message))
+        return None
 
 
 def encode(string):
@@ -91,6 +116,7 @@ STRING_TO_MORSE = {
 }
 
 SK = '...-.-'
+RX_SK = list(SK)
 TX_SK = '_' + SK + '_'
 
 MORSE_TO_STRING = {morse: string for string, morse in STRING_TO_MORSE.items()}

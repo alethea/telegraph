@@ -28,7 +28,8 @@ class Receiver:
     def listen(self):
         decoded = None
         while decoded is None:
-            decoded = self.decode(self.queue.get())
+            duration, state = self.queue.get()
+            decoded = self.decode(duration, state)
         return decoded
 
     def terminate(self):
@@ -51,8 +52,8 @@ class RawReceiver(Receiver):
     def __init__(self, channel, poll_freq=10):
         Receiver.__init__(self, channel, poll_freq)
 
-    def decode(self, atom):
-        return atom
+    def decode(self, duration, state):
+        return (duration, state)
 
 
 class ReceiverWorker(threading.Thread):

@@ -20,10 +20,7 @@ def main():
 
     tx = Transmitter(26)
     rx = Receiver(15)
-
-    address = input('Address: ')
-
-    relay = Relay(rx, tx, address)
+    relay = Relay(rx, tx, input('Address: '))
 
     print('Morse relay ready')
     while True:
@@ -40,6 +37,7 @@ def main():
                     print('Empty message not sent')
         except(EOFError):
             print('\nSending unsent messages')
+            rx.terminate()
             tx.join()
             break
         message = relay.poll()

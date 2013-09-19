@@ -9,6 +9,7 @@
 import atexit
 import RPi.GPIO as GPIO
 from morse import Transmitter, Receiver
+from relay import Relay
 
 def main():
     atexit.register(GPIO.cleanup)
@@ -19,20 +20,30 @@ def main():
     tx = Transmitter(26)
     rx = Receiver(15)
 
-    print ('Morse transceiver ready')
+    address = input('Address: ')
+
+    relay = Relay(rx, tx, address)
+
+    print ('Morse relay ready')
     while True:
         try:
-            message = rx.poll()
-            if message is not None:
-                print('< ' + message)
-            string = input('> ')
-            if len(string) > 0:
-                tx.send(string)
+            address = input('To: ')
+            if len(address) > 0:
+                body = input('Message: ')
+                if len(body) > 0:
+                    relay.send(address, body)
+                else:
+                    print('Empty message not sent')
         except(EOFError):
             print('\nSending unsent messages')
-            rx.terminate()
             tx.join()
             break
+        message = relay.poll()
+        if message is None:
+            print('No new messages')
+        while message is not None:
+            print('Received: ' + message)
+            message = relay.poll()
 
 
 if __name__ == '__main__':

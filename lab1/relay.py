@@ -9,6 +9,7 @@
 import queue
 import threading
 
+
 class Relay:
     def __init__(self, rx, tx, address):
         self.rx = rx
@@ -45,4 +46,3 @@ class Router(threading.Thread):
                 self.parent.queue.put(message[len(self.parent.address):])
             else:
                 self.parent.tx.send(message)
-            

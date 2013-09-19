@@ -35,6 +35,7 @@ class Transmitter(transmitter.Transmitter):
             message.extend(unit_encoding[sym])
         return message
 
+
 class Receiver(receiver.Receiver):
     def __init__(self, channel, freq=1):
         self.freq = freq
@@ -46,7 +47,7 @@ class Receiver(receiver.Receiver):
         if state:
             if duration < 2 * unit:
                 self.message.append('.')
-            else: 
+            else:
                 self.message.append('-')
         else:
             if duration < 2 * unit:

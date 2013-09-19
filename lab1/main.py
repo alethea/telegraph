@@ -11,6 +11,7 @@ import RPi.GPIO as GPIO
 from morse import Transmitter, Receiver
 from relay import Relay
 
+
 def main():
     atexit.register(GPIO.cleanup)
 
@@ -24,7 +25,7 @@ def main():
 
     relay = Relay(rx, tx, address)
 
-    print ('Morse relay ready')
+    print('Morse relay ready')
     while True:
         try:
             address = input('To: ')

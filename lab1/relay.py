@@ -14,8 +14,8 @@ class Relay:
     def __init__(self, rx, tx, address):
         self.rx = rx
         self.tx = tx
+        self.address = address
         self.queue = queue.Queue()
-        self.address = address.upper() + ' '
         self.running = True
         self.router = Router(self)
         self.router.start()
@@ -42,7 +42,7 @@ class Router(threading.Thread):
     def run(self):
         while self.parent.running:
             message = self.parent.rx.listen()
-            if message.startswith(self.parent.address):
+            if message.startswith(self.parent.address.upper() + ' '):
                 self.parent.queue.put(message[len(self.parent.address):])
             else:
                 self.parent.tx.send(message)

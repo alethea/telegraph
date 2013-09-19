@@ -75,10 +75,7 @@ def decode(morse):
     for word in morse_words:
         if word == SK:
             break
-        try:
-            string_words.append(''.join([MORSE_TO_STRING[sym] for sym in word.split(' ')]))
-        except KeyError as error:
-            raise MorseEncodingError from error
+        string_words.append(''.join([MORSE_TO_STRING.get(sym, '') for sym in word.split(' ')]))
     return ' '.join(string_words)
 
 
@@ -87,7 +84,6 @@ class MorseEncodingError(Exception):
 
 
 STRING_TO_MORSE = {
-    '': '',
     ' ': '_',
     'A': '.-',
     'B': '-...',

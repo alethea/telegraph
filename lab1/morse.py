@@ -62,7 +62,10 @@ class Receiver(receiver.Receiver):
 
 
 def encode(string):
-    morse_list = [STRING_TO_MORSE[char] for char in string.upper()]
+    try:
+        morse_list = [STRING_TO_MORSE[char] for char in string.upper()]
+    except KeyError as error:
+        raise MorseEncodingError from error
     return ' '.join(morse_list).replace(' _ ', '_')
 
 
@@ -72,8 +75,15 @@ def decode(morse):
     for word in morse_words:
         if word == SK:
             break
-        string_words.append(''.join([MORSE_TO_STRING[sym] for sym in word.split(' ')]))
+        try:
+            string_words.append(''.join([MORSE_TO_STRING[sym] for sym in word.split(' ')]))
+        except KeyError as error:
+            raise MorseEncodingError from error
     return ' '.join(string_words)
+
+
+class MorseEncodingError(Exception):
+    pass
 
 
 STRING_TO_MORSE = {

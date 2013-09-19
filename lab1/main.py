@@ -8,7 +8,7 @@
 
 import atexit
 import RPi.GPIO as GPIO
-from morse import Transmitter, Receiver
+from morse import Transmitter, Receiver, MorseEncodingError
 from relay import Relay
 
 
@@ -32,7 +32,10 @@ def main():
             if len(address) > 0:
                 body = input('Message: ')
                 if len(body) > 0:
-                    relay.send(address, body)
+                    try:
+                        relay.send(address, body)
+                    except MorseEncodingError:
+                        print('Could not convert to Morse code')
                 else:
                     print('Empty message not sent')
         except(EOFError):

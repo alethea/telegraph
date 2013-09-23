@@ -1,7 +1,7 @@
-Computer Networks
-=================
+Telegraph
+=========
 
-Homeworks and labs for Computer Networks at Olin College
+A telegraph in Python 3 for communicating between Raspberry Pis.
 
 License
 -------

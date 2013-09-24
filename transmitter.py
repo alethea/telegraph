@@ -9,13 +9,11 @@
 import time
 import threading
 import queue
-import RPi.GPIO as GPIO
 
 
 class Transmitter:
-    def __init__(self, channel):
-        GPIO.setup(channel, GPIO.OUT, initial=GPIO.LOW)
-        self.channel = channel
+    def __init__(self, pin):
+        self.pin = pin
         self.queue = queue.Queue()
         self.running = True
         self.worker = TransmitterWorker(self)
@@ -54,9 +52,9 @@ class TransmitterWorker(threading.Thread):
             try:
                 atom = self.parent.queue.get_nowait()
             except queue.Empty:
-                GPIO.output(self.parent.channel, GPIO.LOW)
+                self.parent.pin.output(False)
                 atom = self.parent.queue.get()
             for duration, state in self.parent.encode(atom):
-                GPIO.output(self.parent.channel, state)
+                self.parent.pin.output(state)
                 time.sleep(duration)
             self.parent.queue.task_done()

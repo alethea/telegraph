@@ -9,12 +9,11 @@
 import time
 import threading
 import queue
-import RPi.GPIO as GPIO
 
 
 class Receiver:
-    def __init__(self, channel, poll_freq):
-        self.channel = channel
+    def __init__(self, pin, poll_freq):
+        self.pin = pin
         self.poll_freq = poll_freq
         self.queue = queue.Queue()
         self.worker = ReceiverWorker(self)
@@ -47,12 +46,10 @@ class Receiver:
         self.worker.join()
 
     def read(self):
-        GPIO.setup(self.channel, GPIO.OUT)
-        GPIO.output(self.channel, GPIO.LOW)
+        self.pin.output(False)
         time.sleep(self.flush_delay)
-        GPIO.setup(self.channel, GPIO.IN)
         count = 0
-        while (GPIO.input(self.channel) == GPIO.LOW):
+        while not self.pin.input():
             count += 1
             time.sleep(self.edge_poll_freq)
         return count < self.threshold

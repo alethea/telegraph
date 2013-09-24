@@ -11,9 +11,9 @@ import receiver
 
 
 class Transmitter(transmitter.Transmitter):
-    def __init__(self, channel, freq=1):
+    def __init__(self, pin, freq=1):
         self.freq = freq
-        transmitter.Transmitter.__init__(self, channel)
+        transmitter.Transmitter.__init__(self, pin)
 
     def send(self, string):
         self.queue.put(encode(string))
@@ -37,10 +37,10 @@ class Transmitter(transmitter.Transmitter):
 
 
 class Receiver(receiver.Receiver):
-    def __init__(self, channel, freq=1):
+    def __init__(self, pin, freq=1):
         self.freq = freq
         self.message = []
-        receiver.Receiver.__init__(self, channel, 15)
+        receiver.Receiver.__init__(self, pin, 15)
 
     def decode(self, duration, state):
         unit = 1 / self.freq

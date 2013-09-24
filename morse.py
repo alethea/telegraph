@@ -73,10 +73,15 @@ def encode(string):
 
 def decode(morse):
     symbols = morse.replace('_', ' _ ')
+    chars = []
     try:
-        return ''.join([MORSE_TO_STRING[sym] for sym in symbols.split()])
+        for sym in symbols.split():
+            if sym == SK:
+                break
+            chars.append(MORSE_TO_STRING[sym])
     except KeyError as error:
         raise MorseEncodingError from error
+    return ''.join(chars)
 
 
 class MorseEncodingError(Exception):

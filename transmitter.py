@@ -30,16 +30,6 @@ class Transmitter:
         self.worker.join()
 
 
-class RawTransmitter(Transmitter):
-    def encode(self, atom):
-        return [atom]
-
-    def on(self, duration):
-        self.send((duration, GPIO.HIGH))
-
-    def off(self, duration):
-        self.send((duration, GPIO.LOW))
-
 
 class TransmitterWorker(threading.Thread):
     def __init__(self, parent):

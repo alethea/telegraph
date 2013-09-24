@@ -55,14 +55,6 @@ class Receiver:
         return count < self.threshold
 
 
-class RawReceiver(Receiver):
-    def __init__(self, channel, poll_freq=10):
-        Receiver.__init__(self, channel, poll_freq)
-
-    def decode(self, duration, state):
-        return (duration, state)
-
-
 class ReceiverWorker(threading.Thread):
     def __init__(self, parent):
         threading.Thread.__init__(self)

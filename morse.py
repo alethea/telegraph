@@ -30,10 +30,9 @@ class Transmitter(transmitter.Transmitter):
             ' ': ((2 * unit, False),),
             '_': ((6 * unit, False),)
         }
-        message = []
         for sym in morse:
-            message.extend(unit_encoding[sym])
-        return message
+            for pulse in unit_encoding[sym]:
+                yield pulse
 
 
 class Receiver(receiver.Receiver):

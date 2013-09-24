@@ -6,8 +6,8 @@
 # Alethea Butler <alethea@aletheabutler.com>
 #
 
-from morse import Transmitter, Receiver, MorseEncodingError
-from relay import Relay
+from morse import MorseEncodingError
+from telegraph import Transmitter, Receiver, Relay
 from gpio import GPIO
 
 

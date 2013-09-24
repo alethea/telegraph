@@ -6,61 +6,6 @@
 # Alethea Butler <alethea@aletheabutler.com>
 #
 
-import transmitter
-import receiver
-
-
-class Transmitter(transmitter.Transmitter):
-    def __init__(self, pin, freq=1):
-        self.freq = freq
-        transmitter.Transmitter.__init__(self, pin)
-
-    def send(self, string):
-        self.queue.put(encode(string))
-
-    def encode(self, morse):
-        if not morse.endswith(TX_SK):
-            morse += TX_SK
-        unit = 1 / self.freq
-        # Note that letter and word gaps are reduced by 1 unit do to the
-        # trailing 1 unit gap on each character
-        unit_encoding = {
-            '.': ((unit, True), (unit, False)),
-            '-': ((3 * unit, True), (unit, False)),
-            ' ': ((2 * unit, False),),
-            '_': ((6 * unit, False),)
-        }
-        for sym in morse:
-            for pulse in unit_encoding[sym]:
-                yield pulse
-
-
-class Receiver(receiver.Receiver):
-    def __init__(self, pin, freq=1):
-        self.freq = freq
-        self.message = []
-        receiver.Receiver.__init__(self, pin, 15)
-
-    def decode(self, duration, state):
-        unit = 1 / self.freq
-        if state:
-            if duration < 2 * unit:
-                self.message.append('.')
-            else:
-                self.message.append('-')
-        else:
-            if duration < 2 * unit:
-                pass
-            elif duration < 5 * unit:
-                self.message.append(' ')
-            else:
-                self.message.append('_')
-        if self.message[-len(RX_SK):] == RX_SK:
-            decoded = decode(''.join(self.message)).strip()
-            self.message = []
-            return decoded
-        return None
-
 
 def encode(string):
     try:

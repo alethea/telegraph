@@ -88,7 +88,7 @@ class MorseEncodingError(Exception):
 
 
 STRING_TO_MORSE = {
-    ' ': ' ',
+    ' ': '_',
     'A': '.-',
     'B': '-...',
     'C': '-.-.',
